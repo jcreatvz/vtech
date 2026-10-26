@@ -19,3 +19,9 @@ Original logo paths enter letter by letter, reverse to an icon-only header on sc
 GitHub Pages serves root index.html with relative assets/ paths, so /vtech/ works directly. The private Sites preview uses matching files inside its dist/ deployment folder. Keep those website files synchronized. Do not reintroduce the removed scene parts, restoration scripts or historical generators.
 
 This is a static homepage preview, not the original Next.js app. Preserve source copy, links and metadata; port visual components into the actual application before replacing production functionality.
+
+## Consultation background and tablet framing
+
+The consultation background adapts the user-supplied “Many Thin Light — Originkit” shader, retaining its exact fragment shader and supplied dark-blue/black preset. The standalone WebGL2 module avoids adding React, caps rendering at 30fps and 1.4 million pixels, pauses offscreen/when hidden, and renders a still frame for reduced-motion. A dark-blue CSS gradient remains when WebGL2 is unavailable. Decorative canvas cannot intercept links. The CTA uses only colour transitions; legacy scale utilities were removed to keep its hit area stable.
+
+At 701–1366px, the hero visual fills the grid row with 100% height and no imposed aspect ratio. The mobile hero-copy pseudo-element is removed at 700px and below. Original content and metadata checks and both JavaScript syntax checks pass; GPU rendering requires a WebGL-capable browser.
