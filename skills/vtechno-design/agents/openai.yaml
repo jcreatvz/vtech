@@ -1,0 +1,4 @@
+interface:
+  display_name: "VTechno Design"
+  short_description: "Maintain JC Lutao’s VTechno visual design"
+  default_prompt: "Use $vtechno-design to refine the VTechno website while preserving its content."
