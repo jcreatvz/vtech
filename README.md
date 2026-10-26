@@ -4,9 +4,10 @@ Complete source for the static website redesign preview. Design owned by **JC Lu
 
 ## Run locally
 
-Requires Python 3. No installation or build is needed:
+Requires Python 3. No dependency installation is needed. Restore the bundled Spline export, then start the site:
 
 ```sh
+python prepare_scene.py
 python -m http.server 8080 --directory dist
 ```
 
@@ -44,3 +45,7 @@ The original homepage copy, section inventory, title/description and link destin
 ## GitHub source
 
 Canonical GitHub copy: https://github.com/jcreatvz/vtech. Download using Code → Download ZIP. The website lives in dist/; serve that folder directly. This repository includes the project maintenance skill and design notes.
+
+## Bundled Spline asset
+
+The complete updated 15.7 MB export is included as 40 binary parts in source-assets/spline/ to support reliable transfer. Run `python prepare_scene.py` once after extracting the ZIP; it reconstructs `dist/assets/scene.splinecode` and verifies its SHA-256 before use. No Spline account, download, or scene edits are needed. The reconstructed bytes match the published preview exactly. Before uploading dist/ to any static host, run this step.
