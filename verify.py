@@ -27,7 +27,8 @@ class Page(HTMLParser):
   if self.current is not None and not any(s for _,s in self.stack):self.current.append(data)
 def read(path):
  p=Page();p.feed(Path(path).read_text());return p
-before=read(root/'reference/original.html');after=read(root/'dist/index.html')
+page=root/'index.html' if (root/'index.html').exists() else root/'dist/index.html'
+before=read(root/'reference/original.html');after=read(page)
 assert len(before.sections)==len(after.sections)==10
 expected=list(before.sections)
 for i,(a,b) in enumerate(zip(expected,after.sections)):
@@ -40,7 +41,7 @@ for href in before.links:
  if '/cdn-cgi/l/email-protection' in href:continue
  assert urljoin('https://vtechno.ca',href) in after.links,f'Missing link {href}'
 assert 'mailto:contact@vtechno.ca' in after.links
-html=Path(root/'dist/index.html').read_text()
+html=page.read_text()
 assert 'original-screen' not in html and 'hero-fallback' not in html
 assert {'mobile-menu','review-dialog'} <= after.ids
 assert html.count('class="review-shell"')==5

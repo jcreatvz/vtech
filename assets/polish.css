@@ -6,7 +6,7 @@
 #faq button svg{transition:transform .5s var(--motion-ease)}
 #hero{overflow:clip}#hero .hero-visual{width:calc(100% + clamp(60px,8vw,170px));margin-left:calc(-1 * clamp(60px,8vw,170px));height:auto;aspect-ratio:4/3;min-height:0;align-self:center;z-index:0}
 #hero .hero-copy{z-index:2;pointer-events:none}#hero .hero-copy a,#hero .hero-copy button{pointer-events:auto}#hero .hero-copy:before{content:'';position:absolute;inset:-50px -35px -50px -100px;background:radial-gradient(ellipse at 25% 50%,#070b10d9,transparent 74%);z-index:-1;pointer-events:none}
-.spline-stage{position:absolute;left:50%;top:50%;width:1200px;height:900px;transform-origin:center;will-change:transform}.hero-visual .spline-stage canvas{width:1200px!important;height:900px!important}
+
 .scene-access{position:absolute;bottom:16px;right:24px;z-index:4;background:#112333;color:#c7eaff;border:1px solid #9ddcff40;border-radius:5px;padding:10px 15px;font-size:12px}
 .hero-visual[data-state="ready"] .scene-access{opacity:0;pointer-events:none}.hero-visual[data-state="ready"] .scene-access:focus-visible{opacity:1;pointer-events:auto}.hero-visual[data-state="loading"] .scene-access{display:none}
 .scene-status{padding:30px 14%;}.hero-visual[data-state="ready"] .scene-status{visibility:hidden}
@@ -48,7 +48,7 @@ dialog::backdrop{animation:backdrop-in .3s ease both}dialog.is-closing::backdrop
 #mobile-menu .menu-shell{transform:none}#mobile-menu.is-closing .menu-secondary [role="tabpanel"]{animation:none}
 #contact-cta a{transition:background-color .5s ease,color .5s ease,transform .6s var(--motion-ease),box-shadow .6s ease,filter .5s ease!important}
 #contact-cta a:hover,#contact-cta a:focus-visible{background-color:#d2efff;transform:translateY(-3px);box-shadow:0 10px 32px #78caff1f;filter:none}
-.hero-visual .spline-stage canvas{width:100%!important;height:100%!important}
+
 @media(max-width:700px){
  #hero{min-height:70svh}#hero .hero-layout{position:relative;min-height:70svh;padding:60px 0!important;display:flex!important;align-items:center}
  #hero .hero-visual{position:absolute;inset:0;width:100%;height:70svh;aspect-ratio:auto;margin:0;pointer-events:none;z-index:0}
@@ -57,3 +57,9 @@ dialog::backdrop{animation:backdrop-in .3s ease both}dialog.is-closing::backdrop
  .scene-access{pointer-events:auto;bottom:8px}.scene-status{align-items:flex-end;padding:0 24px 58px;font-size:10px}
 }
 @media(prefers-reduced-motion:reduce){dialog::backdrop{animation:none!important}#contact-cta a:hover{transform:none}}
+
+/* Hosted scene owns its responsive camera. Never scale or crop the embed. */
+.spline-embed{position:absolute;inset:0;width:100%;height:100%;display:block;border:0;transform:none;background:transparent;opacity:0;transition:opacity .6s ease}
+.hero-visual[data-state="ready"] .spline-embed{opacity:1}
+.scene-access[hidden]{display:none!important}
+@media(max-width:700px){.spline-embed{pointer-events:none}#hero .hero-visual{height:70svh;width:100%}}

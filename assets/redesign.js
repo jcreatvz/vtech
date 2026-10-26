@@ -1,53 +1,24 @@
-// Exact published scene downloaded from the user-supplied Spline URL.
-const sceneURL=new URL('./scene.splinecode?v=ed506348f4f7',import.meta.url).href;
-const runtimeURL='https://cdn.spline.design/@splinetool/runtime@2.0.111/build/runtime.js';
-const visual=document.querySelector('#hero-visual'), canvas=document.querySelector('#spline-canvas');
-const toggle=document.querySelector('#scene-toggle'), status=document.querySelector('#scene-status');
+// Official hosted Spline embed: publishing an updated export updates this URL.
+const sceneURL='https://my.spline.design/vtechn-UQCPEEbEaNxbvrPfKkg2JdcY/';
+const visual=document.querySelector('#hero-visual');
+const toggle=document.querySelector('#scene-toggle'),status=document.querySelector('#scene-status');
 const reduced=matchMedia('(prefers-reduced-motion: reduce)');
-let application,loading=false,ready=false,userPaused=false,inView=true,explicit=false;
-
-// Constant render aspect ratio; scale the entire stage uniformly, never stretch its bitmap.
-const stage=document.createElement('div');stage.className='spline-stage';canvas.before(stage);stage.append(canvas);
-function sizeScene(){
- const width=visual.clientWidth,height=visual.clientHeight;if(!width||!height)return;
- // Mobile uses a portrait camera viewport, not a stretched landscape bitmap.
- const mobile=matchMedia('(max-width:700px)').matches;
- const renderWidth=mobile?900:1200,renderHeight=mobile?Math.round(900*height/width):900;
- stage.style.width=`${renderWidth}px`;stage.style.height=`${renderHeight}px`;
- const scale=Math.min(width/renderWidth,height/renderHeight);
- stage.style.transform=`translate(-50%,-50%) scale(${scale})`;
- if(ready)application.setSize(renderWidth,renderHeight);
+let frame,loadTimer;
+function loadScene(){
+ clearTimeout(loadTimer);frame?.remove();visual.dataset.state='loading';
+ toggle.disabled=true;toggle.textContent='Loading 3D';status.textContent='Loading the Spline scene…';
+ frame=document.createElement('iframe');frame.className='spline-embed';frame.title='Versatile Techno interactive 3D scene';
+ frame.setAttribute('allow','fullscreen');frame.setAttribute('allowfullscreen','');frame.setAttribute('tabindex','-1');
+ frame.addEventListener('load',()=>{clearTimeout(loadTimer);visual.dataset.state='ready';status.textContent='';toggle.hidden=true;},{once:true});
+ frame.addEventListener('error',()=>{clearTimeout(loadTimer);visual.dataset.state='fallback';status.textContent='The 3D scene could not load.';toggle.disabled=false;toggle.textContent='Retry 3D';},{once:true});
+ frame.src=sceneURL;visual.prepend(frame);
+ loadTimer=setTimeout(()=>{if(visual.dataset.state==='loading'){status.textContent='The 3D scene is taking longer to load.';toggle.disabled=false;toggle.textContent='Retry 3D';}},25000);
 }
-sizeScene();
-new ResizeObserver(()=>sizeScene()).observe(visual);
-function syncPlayback(){if(!ready)return;(userPaused||!inView||document.hidden)?application.stop():application.play();}
-function label(){toggle.textContent=userPaused?'Play 3D':'Pause 3D';toggle.setAttribute('aria-label',userPaused?'Play 3D animation':'Pause 3D animation');toggle.setAttribute('aria-pressed',String(userPaused));}
-async function loadScene(){
- if(loading||ready)return;loading=true;visual.dataset.state='loading';toggle.disabled=true;toggle.textContent='Loading 3D';status.textContent='Loading your Spline scene…';
- let timeout;
- try{
-  const {Application}=await Promise.race([import(runtimeURL),new Promise((_,reject)=>{timeout=setTimeout(()=>reject(new Error('Runtime timeout')),20000)})]);clearTimeout(timeout);
-  application=new Application(canvas,{htmlContentMode:'inline'});
-  await Promise.race([application.load(sceneURL),new Promise((_,reject)=>{timeout=setTimeout(()=>reject(new Error('Scene timeout')),25000)})]);clearTimeout(timeout);
-  ready=true;visual.dataset.state='ready';sizeScene();status.textContent='Interactive 3D scene loaded.';
-  userPaused=reduced.matches&&!explicit;label();syncPlayback();
- }catch(error){
-  clearTimeout(timeout);application?.dispose();application=null;ready=false;visual.dataset.state='fallback';
-  toggle.textContent='Retry 3D';toggle.setAttribute('aria-label','Retry loading the 3D scene');
-  status.textContent='The 3D scene is unavailable. You can retry below.';
-  console.info('Spline fallback active:',error.message);
- }finally{loading=false;toggle.disabled=false;}
-}
-toggle.addEventListener('click',()=>{explicit=true;if(!ready){loadScene();return;}userPaused=!userPaused;label();syncPlayback();});
-const observer=new IntersectionObserver(([entry])=>{inView=entry.isIntersecting;syncPlayback();},{rootMargin:'80px'});observer.observe(visual);
-document.addEventListener('visibilitychange',syncPlayback);
-reduced.addEventListener('change',()=>{if(reduced.matches&&ready){userPaused=true;label();syncPlayback();}});
-canvas.addEventListener('webglcontextlost',()=>{ready=false;visual.dataset.state='fallback';toggle.textContent='Retry 3D';status.textContent='The 3D connection was interrupted. Retry to reconnect.';});
-// Pointer events only on fine pointers; touch users retain vertical page scrolling.
-if(matchMedia('(pointer:coarse)').matches)canvas.style.pointerEvents='none';
+toggle.addEventListener('click',loadScene);
 const saveData=navigator.connection?.saveData||['slow-2g','2g'].includes(navigator.connection?.effectiveType);
-if(!reduced.matches&&!saveData){if('requestIdleCallback'in window)requestIdleCallback(()=>loadScene(),{timeout:2000});else setTimeout(loadScene,400);}
-window.addEventListener('pagehide',()=>application?.stop());window.addEventListener('pageshow',syncPlayback);
+if(!reduced.matches&&!saveData){if('requestIdleCallback' in window)requestIdleCallback(loadScene,{timeout:1500});else setTimeout(loadScene,200);}
+else{status.textContent='Load the interactive scene when you’re ready.';toggle.textContent='Load 3D';}
+// Cross-origin embeds manage their own camera and renderer; no CSS bitmap scaling.
 // Native dialogs keep focus inside the open surface and restore it on close.
 const menu=document.querySelector('#menu-toggle'),menuDialog=document.querySelector('#mobile-menu');
 const reviewDialog=document.querySelector('#review-dialog');

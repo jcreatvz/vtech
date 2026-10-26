@@ -1,34 +1,21 @@
-# Design and implementation notes
+# Design notes
 
-Design owned by JC Lutao. © 2026 JC Lutao. Original Versatile Techno branding, copy, source imagery, fonts, Spline technology and other third-party materials retain their respective ownership and licenses. This credit does not transfer third-party rights.
+Design owned by JC Lutao. © 2026 JC Lutao. Existing Versatile Techno branding, text, images, font and third-party technology retain their respective ownership and licenses.
 
-## Visual system
+The design uses near-black #070b10, icy-blue #a8dfff, Geist, original vector branding, full-width sections and fluid gutters. The right-side hero visual overlaps behind the copy on desktop. Mobile places a full-width 70svh scene behind a readability gradient and clickable CTAs.
 
-Near-black #070b10; icy blue #a8dfff; original Geist font and vector logo. Full-width sections with 18–100px fluid gutters. Hero copy sits above a slightly overlapping 3D canvas on desktop; mobile places a full-width 70svh canvas behind the copy with a readability gradient.
+## Hosted Spline
 
-## Motion
+Use the supplied public Spline URL in the official iframe embed. Do not download or reconstruct the binary scene. No local runtime dependency or camera resize code is needed. The iframe has no border, mask, CSS scale or toolbar. The Spline page owns its responsive camera. Publish scene changes in Spline; browsers may require a refresh to obtain the latest export.
 
-- Hover transitions use explicit properties and 450–700ms easing.
-- Projects separate slow 20-second image drift from 1.4-second pointer parallax. Drift pauses outside the viewport. Original utility scale effects are reset to prevent snapping.
-- Original typemark artwork is split into nine letter paths. Entrance proceeds left to right; exit reverses after scrolling 24px. Returning to the top restores it. Its layout footprint remains reserved to prevent navigation jumps.
-- Below-fold items are armed before observation and revealed once in local section order. Already-visible items are not hidden again. Keyboard focus and reduced-motion reveal content immediately.
-- The loader dismisses on font readiness or a short deadline, never waits for the 15.7MB scene, and has a CSS/JS timeout escape. No-JavaScript browsing keeps content visible.
-- A few sections have low-opacity, slow blue lighting effects. Reduced-motion disables drift, lighting motion and entrance transitions.
+Cross-origin iframe rendering cannot be inspected or paused by the parent page. Reduced-motion and data-saving users opt in before it loads. An iframe load event confirms the frame document loaded, not successful GPU rendering. The test browser previously disabled WebGL; validate the authored scene on a WebGL-capable device. Mobile pointer events stay disabled to preserve normal page scrolling.
 
-## Spline framing
+## Motion and accessibility
 
-Official runtime 2.0.111 loads the unchanged supplied scene. Desktop renders at 1200×900 and scales uniformly to fit. Mobile uses a 900px-wide portrait render viewport sized to the 70svh container; both CSS axes share one uniform scale. This avoids aspect-ratio distortion; it cannot change camera composition authored inside Spline. For different artistic framing, edit the Spline camera itself. No expanded scene dialog or scene-toolbar remains. A keyboard-focusable pause button is visually hidden during normal successful rendering; load/retry appears only for opt-in or failure states.
+Original logo paths enter letter by letter, reverse to an icon-only header on scroll, and return at the top. Project images separate slow drift from pointer parallax. Hover properties transition explicitly. FAQ height/opacity and navigation dropdowns animate in both directions. Dialog exits await animation completion before hiding; reduced-motion skips animation. Review cards stay fixed height with full copy in a separate dialog. The loader does not wait for the Spline scene.
 
-## Scope and known limits
+## Source and deployment
 
-This repository is the complete static redesign preview, not the unavailable original Next.js application. All secondary routes and forms link to vtechno.ca. Source images may still load from their original external URLs; internet access is required for those and the official Spline runtime. No backend, private integrations or original application code is included.
+GitHub Pages serves root index.html with relative assets/ paths, so /vtech/ works directly. The private Sites preview uses matching files inside its dist/ deployment folder. Keep those website files synchronized. Do not reintroduce the removed scene parts, restoration scripts or historical generators.
 
-The QA browser disables WebGL. CSS stage ratio and responsive layout can be verified, but successful scene rendering, authored camera composition and real GPU performance require a WebGL-capable device. Optimize the scene in Spline before making performance guarantees. Legacy reconstruction scripts are retained only for provenance and require BeautifulSoup; running them overwrites final HTML changes.
-
-## Current validation
-
-Content/link/metadata preservation and JavaScript syntax checks passed. Browser checks covered widths 320, 390, 768, 1024 and the 1363px desktop viewport with no horizontal overflow. The canvas retained its 4:3 ratio. The header changed to icon-only after scroll; project images were visible and drifting with no pending hidden blocks in view. The page loader dismissed. The browser again reported unavailable WebGL, so scene rendering remains unverified.
-
-## Latest refinements
-
-Refreshed published scene SHA-256: ed506348f4f774de66c6def0b8b79dcc5bc83b02eab6e61e3ffb2f4822cd5c53. Runtime stays at export version 2.0.111. FAQ height/opacity and desktop dropdown animations are interruptible; menu dialogs wait for their actual exit animation before closing. Reduced-motion bypasses those animations. Free Consultation hover transitions use explicit properties.
+This is a static homepage preview, not the original Next.js app. Preserve source copy, links and metadata; port visual components into the actual application before replacing production functionality.
