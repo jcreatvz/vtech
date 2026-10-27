@@ -201,7 +201,7 @@ function init(){
  const cache=new Map();const u=name=>{if(!cache.has(name))cache.set(name,gl.getUniformLocation(program,name));return cache.get(name);};
  const one={uDirMode:3,uDensity:.8875,uGap:.009,uBend:.05,uSpeed:1.55,uJitter:.15,uFront:.6,uPeriod:.45,uDashW:.004,uGuideW:.0012,uGuideA:1.1,uDotted:.3,uDotGap:.009,uGlowR:.006,uGlowA:.9,uFanRays:20,uFanW:.4,uFanA:1.7,uFanGap:8*Math.PI/180,uHaze:1.2,uLead:.12,uFade:.3,uCycle:7.5,uEmitEnd:6.6,uBoost:1.6,uSeed:7,uGrain:0,uVignette:0,uScale:1};
  for(const [name,value] of Object.entries(one))gl.uniform1f(u(name),value);
- gl.uniform2f(u('uApex'),.8,.59);gl.uniform2f(u('uDash'),.05,.32);gl.uniform2f(u('uIntro'),.17,.21);
+ gl.uniform2f(u('uApex'),.5,.5);gl.uniform2f(u('uDash'),.05,.32);gl.uniform2f(u('uIntro'),.17,.21);
  gl.uniform3f(u('uBg'),2/255,21/255,33/255);gl.uniform3f(u('uBase'),0,0,0);gl.uniform3f(u('uAccent'),0,0,0);
  gl.uniform3f(u('uGuideCol'),9/255,9/255,9/255);gl.uniform3f(u('uHazeCol'),0,29/255,47/255);
  let visible=false,raf=0,last=0,clock=2.5,mx=.5,my=.5,tx=.5,ty=.5,hover=0,targetHover=0,lost=false,parallax=0;
@@ -209,7 +209,7 @@ function init(){
   const rect=section.getBoundingClientRect();
   const target=reduced.matches?0:Math.max(-1,Math.min(1,(innerHeight/2-(rect.top+rect.height/2))/((innerHeight+rect.height)/2)));
   parallax=reduced.matches?0:parallax+(target-parallax)*k;
-  gl.uniform2f(u('uApex'),.8+(reduced.matches?0:(mx-.5)*.008),.59+parallax*.025+(reduced.matches?0:(my-.5)*.01));
+  gl.uniform2f(u('uApex'),.5+(reduced.matches?0:(mx-.5)*.008),.5+parallax*.015+(reduced.matches?0:(my-.5)*.01));
   gl.viewport(0,0,canvas.width,canvas.height);gl.uniform2f(u('uRes'),canvas.width,canvas.height);gl.uniform1f(u('uTime'),clock);gl.uniform2f(u('uMouse'),mx,my);gl.uniform1f(u('uHover'),reduced.matches?0:hover);gl.drawArrays(gl.TRIANGLES,0,3);canvas.classList.add('is-ready');}
  function tick(now){raf=0;if(!visible||document.hidden||reduced.matches||lost)return;if(!last||now-last>=1000/30){draw(last?Math.min((now-last)/1000,.1):0);last=now;}raf=requestAnimationFrame(tick);}
  function sync(){cancelAnimationFrame(raf);raf=0;last=0;if(!lost&&visible&&!document.hidden){if(reduced.matches)draw();else raf=requestAnimationFrame(tick);}}

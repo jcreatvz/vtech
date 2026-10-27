@@ -100,11 +100,26 @@ if(!reduced.matches){
 // Header artwork enters left to right and exits in reverse without shifting navigation.
 const header=document.querySelector('header');
 let scrollQueued=false;
-function updateHeader(){header.classList.toggle('brand-compact',scrollY>24);scrollQueued=false;}
+let compactBrand=scrollY>24;
+const iconSolid=header.querySelector('.icon-solid');let iconAnimation;
+function spinIcon(){
+ if(reduced.matches||!iconSolid||iconAnimation?.playState==='running')return;
+ const options={duration:1350,easing:'linear'};
+ iconAnimation=iconSolid.animate([
+  {transform:'rotateX(0deg) rotateY(0deg) translateY(0)',offset:0},
+  {transform:'rotateX(-9deg) rotateY(115deg) translateY(-2px)',offset:.3},
+  {transform:'rotateX(5deg) rotateY(285deg) translateY(-1px)',offset:.65},
+  {transform:'rotateX(-2deg) rotateY(374deg) translateY(1px)',offset:.85},
+  {transform:'rotateX(0deg) rotateY(356deg) translateY(-.5px)',offset:.94},
+  {transform:'rotateX(0deg) rotateY(360deg) translateY(0)',offset:1}
+ ],options);
+ iconSolid.querySelectorAll('.icon-depth').forEach(layer=>layer.animate([{opacity:0,offset:0},{opacity:1,offset:.12},{opacity:1,offset:.8},{opacity:0,offset:1}],options));
+}
+function updateHeader(){const next=scrollY>24;header.classList.toggle('brand-compact',next);if(next&&!compactBrand&&!document.documentElement.classList.contains('booting'))spinIcon();compactBrand=next;scrollQueued=false;}
 window.addEventListener('scroll',()=>{if(!scrollQueued){scrollQueued=true;requestAnimationFrame(updateHeader);}},{passive:true});updateHeader();
 const dismissLoader=()=>{document.documentElement.classList.remove('booting');header.classList.add('brand-ready');};
-Promise.race([document.fonts.ready,new Promise(resolve=>setTimeout(resolve,900))]).then(()=>requestAnimationFrame(dismissLoader));
-setTimeout(dismissLoader,1500);
+const loaderElapsed=performance.now()-(window.vtechBootStart??performance.now());
+setTimeout(dismissLoader,Math.max(0,4700-loaderElapsed));
 // Image drift and pointer parallax have separate transform layers.
 for(const card of document.querySelectorAll('#projects>div:nth-child(2)>a')){
  const img=card.querySelector('img');if(!img)continue;
