@@ -104,7 +104,7 @@ let compactBrand=scrollY>24;
 const iconSolid=header.querySelector('.icon-solid');let iconAnimation;
 function spinIcon(){
  if(reduced.matches||!iconSolid||iconAnimation?.playState==='running')return;
- const options={duration:1350,easing:'linear'};
+ const options={duration:1080,easing:'cubic-bezier(.22,.61,.36,1)'};
  iconAnimation=iconSolid.animate([
   {transform:'rotateX(0deg) rotateY(0deg) translateY(0)',offset:0},
   {transform:'rotateX(-9deg) rotateY(115deg) translateY(-2px)',offset:.3},

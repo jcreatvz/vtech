@@ -93,3 +93,7 @@ html.booting{overflow:hidden}
 @keyframes vector-loader-progress{0%{transform:scaleX(0);opacity:.6}90%{transform:scaleX(1);opacity:1}100%{transform:scaleX(1);opacity:0}}
 @keyframes vector-loader-reveal{0%,90%{opacity:1;visibility:visible}100%{opacity:0;visibility:hidden}}
 @media(prefers-reduced-motion:reduce){.booting #page-loader{display:grid!important;animation:none!important}#page-loader img,#page-loader span{animation:none!important}.icon-depth{display:none}}
+
+/* Keep legacy Firefox separate so unsupported selectors never discard the rule. */
+::-moz-selection{background:#17385b;color:#b2ebff;text-shadow:none}
+::selection{background:#17385b;color:#b2ebff;text-shadow:none}
